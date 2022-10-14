@@ -1,0 +1,26 @@
+<template>
+  <div class="main-screen">
+    <input-block class="input-block"></input-block>
+    <table-component></table-component>
+    <search-block class="search-block"></search-block>
+  </div>
+</template>
+
+<script>
+export default {
+  setup() {},
+};
+</script>
+
+<style scoped lang="scss">
+.main-screen {
+  .input-block {
+    border: 2px solid red;
+    height: 100px;
+  }
+  .search-block {
+    border: 2px solid green;
+    height: 100px;
+  }
+}
+</style>
