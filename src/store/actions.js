@@ -8,4 +8,19 @@ export default {
       console.error(err);
     }
   },
+  addItem: async function ({ commit }, item) {
+    try {
+      commit("addItem", item);
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  setItems: async function (store) {
+    try {
+      const res = store.getters.get_items;
+      res && store.commit("addItemsInLocal", res);
+    } catch (err) {
+      console.error(err);
+    }
+  },
 };

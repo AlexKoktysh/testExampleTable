@@ -16,7 +16,7 @@ export default {
   setup() {
     const store = useStore();
     const headers = computed(() => store.state.headers);
-    const items = computed(() => store.getters.get_items);
+    const items = computed(() => store.state.items);
     const itemsSelected = ref([]);
     const getItems = async () => {
       await store.dispatch("getItems");
