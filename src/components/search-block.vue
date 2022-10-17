@@ -1,11 +1,49 @@
 <template>
-  <div>Search block!</div>
+  <div class="bottom-block">
+    <button-component
+      nameButton="DELETE"
+      :delete="deleteItem"
+    ></button-component>
+    <div class="search">
+      <input-item id="search" @blurInput="blurInput" placeholder="Search" />
+      <div>users count: {{ searchCounter }}</div>
+    </div>
+  </div>
 </template>
 
 <script>
+import { computed } from "vue";
+import { useStore } from "vuex";
 export default {
-  setup() {},
+  props: [],
+  emits: ["delete", "search"],
+  setup(_props, { attrs }) {
+    const store = useStore();
+    const searchCounter = computed(() => store.state.searchItemsCounter);
+    const deleteItem = () => {
+      attrs.delete();
+    };
+    const blurInput = (_type, value) => {
+      attrs.search(value);
+    };
+    return {
+      deleteItem,
+      blurInput,
+      searchCounter,
+    };
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.bottom-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .search {
+    display: flex;
+    align-items: center;
+    margin-right: 60px;
+  }
+}
+</style>

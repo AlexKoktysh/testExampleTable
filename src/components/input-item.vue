@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { IMaskDirective } from "vue-imask";
 export default {
   props: {
@@ -25,6 +25,7 @@ export default {
     invalid: Boolean,
     error: Object,
     phoneNumberMask: String,
+    clearField: Boolean,
   },
   setup(props, { emit }) {
     const inputValue = ref("");
@@ -53,6 +54,17 @@ export default {
         }
       }
     };
+    watch(
+      () => inputValue.value,
+      () => props.id === "search" && blur()
+    );
+    watch(
+      () => props.clearField.value,
+      (val) => {
+        val;
+        debugger;
+      }
+    );
     return {
       inputValue,
       blur,

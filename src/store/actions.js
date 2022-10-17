@@ -15,10 +15,32 @@ export default {
       console.error(err);
     }
   },
-  setItems: async function (store) {
+  getItemsInLocal: async function (store) {
     try {
       const res = store.getters.get_items;
       res && store.commit("addItemsInLocal", res);
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  deleteItem: async function ({ commit }, items) {
+    try {
+      commit("deleteItem", items);
+      commit("setSelectedItem", []);
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  setSelectedItem: async function ({ commit }, items) {
+    try {
+      commit("setSelectedItem", items);
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  setSearchItemsCounter: async function ({ commit }, value) {
+    try {
+      commit("setSearchItemsCounter", value);
     } catch (err) {
       console.error(err);
     }

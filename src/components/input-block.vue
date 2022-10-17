@@ -7,6 +7,7 @@
         @blurInput="blurInput"
         :invalid="fullNameValidate"
         :error="v$.fullName.$errors"
+        :clearField="clear"
       />
       <input-item
         id="email"
@@ -14,6 +15,7 @@
         @blurInput="blurInput"
         :invalid="emailValidate"
         :error="v$.email.$errors"
+        :clearField="clear"
       />
       <input-item
         id="phone"
@@ -22,9 +24,10 @@
         :invalid="phoneValidate"
         :error="v$.phone.$errors"
         :phoneNumberMask="phoneNumberMask"
+        :clearField="clear"
       />
     </div>
-    <button-component type="submit" nameButton="SAVE"></button-component>
+    <button-component type="submit" nameButton="ADD"></button-component>
   </form>
 </template>
 
@@ -47,6 +50,7 @@ export default {
     const fullNameValidate = ref(false);
     const emailValidate = ref(false);
     const phoneValidate = ref(false);
+    const clear = ref(false);
     const validForm = computed(
       () =>
         !fullNameValidate.value && !emailValidate.value && !phoneValidate.value
@@ -59,7 +63,10 @@ export default {
         email: email.value,
         phone: phone.value,
       };
-      validForm.value && store.dispatch("addItem", item);
+      validForm.value && store.dispatch("addItem", item) && clearField();
+    };
+    const clearField = () => {
+      clear.value = true;
     };
     const setFullNameValidate = () => {
       fullNameValidate.value =
@@ -129,6 +136,7 @@ export default {
       emailValidate,
       phoneValidate,
       phoneNumberMask,
+      clear,
     };
   },
   validations() {

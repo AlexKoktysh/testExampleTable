@@ -5,4 +5,6 @@ export default {
     { text: "Phone", value: "phone" },
   ],
   items: [],
+  selectItems: [],
+  searchItemsCounter: 0,
 };
