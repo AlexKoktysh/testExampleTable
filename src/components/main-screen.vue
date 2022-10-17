@@ -6,6 +6,7 @@
       class="search-block"
       :delete="deleteItems"
       :search="search"
+      :selectItems="selectItems.length"
     ></search-block>
   </div>
 </template>
@@ -39,6 +40,7 @@ export default {
       getItems,
       search,
       searchValue,
+      selectItems,
     };
   },
 };
@@ -47,12 +49,10 @@ export default {
 <style scoped lang="scss">
 .main-screen {
   .input-block {
-    border: 2px solid red;
-    height: 100px;
+    min-height: 100px;
   }
   .search-block {
-    border: 2px solid green;
-    height: 100px;
+    min-height: 100px;
   }
 }
 </style>

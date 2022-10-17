@@ -8,6 +8,7 @@
         :invalid="fullNameValidate"
         :error="v$.fullName.$errors"
         :clearField="clear"
+        customStyle="margin-bottom: 20px"
       />
       <input-item
         id="email"
@@ -16,6 +17,7 @@
         :invalid="emailValidate"
         :error="v$.email.$errors"
         :clearField="clear"
+        customStyle="margin-bottom: 20px"
       />
       <input-item
         id="phone"
@@ -25,9 +27,14 @@
         :error="v$.phone.$errors"
         :phoneNumberMask="phoneNumberMask"
         :clearField="clear"
+        customStyle="margin-bottom: 20px"
       />
     </div>
-    <button-component type="submit" nameButton="ADD"></button-component>
+    <button-component
+      :disabled="!validForm"
+      type="submit"
+      nameButton="ADD"
+    ></button-component>
   </form>
 </template>
 
@@ -53,7 +60,12 @@ export default {
     const clear = ref(false);
     const validForm = computed(
       () =>
-        !fullNameValidate.value && !emailValidate.value && !phoneValidate.value
+        fullName.value &&
+        email.value &&
+        phone.value &&
+        !fullNameValidate.value &&
+        !emailValidate.value &&
+        !phoneValidate.value
     );
     const phoneNumberMask = { mask: "+375 (00) 000-00-00" };
     const submit = () => {
@@ -137,6 +149,7 @@ export default {
       phoneValidate,
       phoneNumberMask,
       clear,
+      validForm,
     };
   },
   validations() {
@@ -172,6 +185,7 @@ export default {
   .input-block {
     display: flex;
     align-items: flex-start;
+    flex-wrap: wrap;
   }
 }
 </style>

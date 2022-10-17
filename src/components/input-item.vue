@@ -1,9 +1,9 @@
 <template>
-  <div class="input-item">
+  <div :style="customStyle" class="input-item">
     <input
       :placeholder="placeholder"
       v-model.trim="inputValue"
-      :class="{ invalid: invalid }"
+      :class="{ invalid: invalid, icon: icon }"
       @blur="blur"
       class="item"
       v-imask="phoneNumberMask"
@@ -26,6 +26,8 @@ export default {
     error: Object,
     phoneNumberMask: String,
     clearField: Boolean,
+    customStyle: String,
+    icon: Boolean,
   },
   setup(props, { emit }) {
     const inputValue = ref("");
@@ -82,9 +84,19 @@ export default {
   margin: 0 30px;
   display: flex;
   flex-direction: column;
+  .icon {
+    background-image: url("../image/icon.png");
+    background-repeat: no-repeat;
+    background-position: 4px;
+    background-size: 8%;
+    width: 210px !important;
+    padding-left: 30px !important;
+  }
   .item {
     height: 30px;
     width: 250px;
+    border: 1px solid rgb(194, 190, 190);
+    padding-left: 10px;
   }
   .invalid {
     border: 2px solid red;

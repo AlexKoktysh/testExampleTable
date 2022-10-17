@@ -2,10 +2,17 @@
   <div class="bottom-block">
     <button-component
       nameButton="DELETE"
+      type="delete"
       :delete="deleteItem"
+      :disabled="!selectItems"
     ></button-component>
     <div class="search">
-      <input-item id="search" @blurInput="blurInput" placeholder="Search" />
+      <input-item
+        :icon="true"
+        id="search"
+        @blurInput="blurInput"
+        placeholder="Search"
+      />
       <div>users count: {{ searchCounter }}</div>
     </div>
   </div>
@@ -15,7 +22,7 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 export default {
-  props: [],
+  props: ["selectItems"],
   emits: ["delete", "search"],
   setup(_props, { attrs }) {
     const store = useStore();

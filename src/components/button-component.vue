@@ -1,6 +1,12 @@
 <template>
   <div class="button-block">
-    <button class="button" :type="type" @click="deleteItem">
+    <button
+      class="button"
+      :type="type"
+      @click="deleteItem"
+      :disabled="disabled"
+      :class="{ disabled: disabled }"
+    >
       {{ nameButton }}
     </button>
   </div>
@@ -8,11 +14,11 @@
 
 <script>
 export default {
-  props: ["nameButton", "type"],
+  props: ["nameButton", "type", "disabled"],
   emits: ["delete"],
-  setup(_props, { attrs }) {
+  setup(props, { attrs }) {
     const deleteItem = () => {
-      attrs.delete();
+      props.type === "delete" && attrs.delete();
     };
     return {
       deleteItem,
@@ -26,9 +32,14 @@ export default {
   margin: 0 30px;
   .button {
     height: 30px;
-    width: 80px;
-    background-color: blanchedalmond;
-    color: blue;
+    width: 120px;
+    color: white;
+    background-color: #1d90ff;
+    border: none;
+    border-radius: 20px;
+  }
+  .disabled {
+    background-color: #bbc1c5;
   }
 }
 </style>
