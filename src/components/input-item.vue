@@ -3,8 +3,7 @@
     <input
       :placeholder="placeholder"
       v-model.trim="inputValue"
-      :class="{ invalid: invalid, icon: icon }"
-      @blur="blur"
+      :class="{ invalid: error && error.length, icon: icon }"
       class="item"
       v-imask="phoneNumberMask"
       @keypress="isNumber"
@@ -18,20 +17,22 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { IMaskDirective } from "vue-imask";
+import { useStore } from "vuex";
 export default {
   props: {
     id: String,
     placeholder: String,
-    invalid: Boolean,
     error: Array,
     phoneNumberMask: Object,
-    clearField: Boolean,
     customStyle: String,
     icon: Boolean,
+    validate: Object,
   },
   setup(props, { emit }) {
+    const store = useStore();
+    const clear = computed(() => store.state.clear);
     const inputValue = ref("");
     const blur = () => {
       emit("blurInput", props.id, inputValue.value);
@@ -58,15 +59,18 @@ export default {
         }
       }
     };
+    const clearInput = () => {
+      inputValue.value = "";
+      emit("reset", props.id);
+    };
     watch(
       () => inputValue.value,
-      () => props.id === "search" && blur()
+      () => blur()
     );
     watch(
-      () => props.clearField.value,
+      () => clear.value,
       (val) => {
-        val;
-        debugger;
+        val && clearInput();
       }
     );
     return {

@@ -47,6 +47,10 @@ export default {
       () => clientItemsLength.value,
       (val) => store.dispatch("setSearchItemsCounter", val)
     );
+    watch(
+      () => items.value.length,
+      () => store.commit("setClearValue", false)
+    );
 
     return {
       headers,

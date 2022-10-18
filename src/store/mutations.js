@@ -8,6 +8,7 @@ export default {
   addItem(state, item) {
     const objItem = { ...item, id: state.items.length + 1 };
     state.items.push(objItem);
+    state.clear = true;
     localStorage.setItem(LocalStorageKeys.items, JSON.stringify(state.items));
   },
   addItemsInLocal(state, items) {
@@ -23,5 +24,8 @@ export default {
   },
   setSearchItemsCounter(state, value) {
     state.searchItemsCounter = value;
+  },
+  setClearValue(state, value) {
+    state.clear = value;
   },
 };

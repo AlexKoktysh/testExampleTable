@@ -7,4 +7,5 @@ export default {
   items: [],
   selectItems: [],
   searchItemsCounter: 0,
+  clear: false,
 };

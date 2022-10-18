@@ -1,34 +1,17 @@
 <template>
   <form class="form-control" @submit.prevent="submit">
     <div class="input-block">
-      <input-item
-        id="fullName"
-        placeholder="Full Name"
-        @blurInput="blurInput"
-        :invalid="fullNameValidate"
-        :error="v$.fullName.$errors"
-        :clearField="clear"
-        customStyle="margin-bottom: 20px"
-      />
-      <input-item
-        id="email"
-        placeholder="Email"
-        @blurInput="blurInput"
-        :invalid="emailValidate"
-        :error="v$.email.$errors"
-        :clearField="clear"
-        customStyle="margin-bottom: 20px"
-      />
-      <input-item
-        id="phone"
-        placeholder="Phone"
-        @blurInput="blurInput"
-        :invalid="phoneValidate"
-        :error="v$.phone.$errors"
-        :phoneNumberMask="phoneNumberMask"
-        :clearField="clear"
-        customStyle="margin-bottom: 20px"
-      />
+      <div v-for="(item, index) in inputItem" :key="index">
+        <input-item
+          :id="item.id"
+          :placeholder="item.placeholder"
+          @blurInput="blurInput"
+          :error="v$.params[item.id].$errors"
+          customStyle="margin-bottom: 20px"
+          :phoneNumberMask="item.mask"
+          @reset="reset"
+        />
+      </div>
     </div>
     <button-component
       :disabled="!validForm"
@@ -39,7 +22,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
 import { useStore } from "vuex";
@@ -51,126 +34,90 @@ export default {
   setup() {
     const store = useStore();
     const v$ = useVuelidate();
-    const fullName = ref("");
-    const email = ref("");
-    const phone = ref("");
-    const fullNameValidate = ref(false);
-    const emailValidate = ref(false);
-    const phoneValidate = ref(false);
-    const clear = ref(false);
+    const inputItem = [
+      {
+        id: "fullName",
+        placeholder: "Full Name",
+      },
+      {
+        id: "email",
+        placeholder: "Email",
+      },
+      {
+        id: "phone",
+        mask: { mask: "+375 (00) 000-00-00" },
+        placeholder: "Phone",
+      },
+    ];
+    const params = reactive({
+      fullName: "",
+      email: "",
+      phone: "",
+    });
+    const paramsValidate = reactive({
+      fullName: false,
+      email: false,
+      phone: false,
+    });
     const validForm = computed(
       () =>
-        fullName.value &&
-        email.value &&
-        phone.value &&
-        !fullNameValidate.value &&
-        !emailValidate.value &&
-        !phoneValidate.value
+        paramsValidate.fullName && paramsValidate.email && paramsValidate.phone
     );
-    const phoneNumberMask = { mask: "+375 (00) 000-00-00" };
     const submit = () => {
-      validate();
       const item = {
-        name: fullName.value,
-        email: email.value,
-        phone: phone.value,
+        name: params.fullName,
+        email: params.email,
+        phone: params.phone,
       };
-      validForm.value && store.dispatch("addItem", item) && clearField();
+      store.commit("setClearValue", true);
+      store.dispatch("addItem", item);
+      Object.keys(paramsValidate).forEach((el) => (paramsValidate[el] = false));
     };
-    const clearField = () => {
-      clear.value = true;
+    const reset = (type) => {
+      v$.value.$reset();
+      v$.value.params[type].$reset();
     };
-    const setFullNameValidate = () => {
-      fullNameValidate.value =
-        (v$.value.fullName.$dirty && v$.value.fullName.required.$invalid) ||
-        (v$.value.fullName.$dirty && v$.value.fullName.reg.$invalid);
-    };
-    const setEmailValidate = () => {
-      emailValidate.value =
-        (v$.value.email.$dirty && v$.value.email.required.$invalid) ||
-        (v$.value.email.$dirty && v$.value.email.email.$invalid);
-    };
-    const setPhoneValidate = () => {
-      phoneValidate.value =
-        (v$.value.phone.$dirty && v$.value.phone.required.$invalid) ||
-        (v$.value.phone.$dirty && v$.value.phone.minLength.$invalid);
-    };
-    const validate = (type) => {
-      if (v$.value.$invalid) {
-        switch (type) {
-          case "fullName":
-            v$.value.fullName.$touch();
-            setFullNameValidate();
-            break;
-          case "email":
-            v$.value.email.$touch();
-            setEmailValidate();
-            break;
-          case "phone":
-            v$.value.phone.$touch();
-            setPhoneValidate();
-            break;
-          default:
-            v$.value.$touch();
-            setFullNameValidate();
-            setEmailValidate();
-            setPhoneValidate();
-            break;
-        }
-      }
+    const validate = async (type) => {
+      paramsValidate[type] = await v$.value.params[type].$validate();
     };
     const blurInput = (type, value) => {
-      switch (type) {
-        case "fullName":
-          fullName.value = value;
-          break;
-        case "email":
-          email.value = value;
-          break;
-        case "phone":
-          phone.value = value;
-          break;
-        default:
-          break;
-      }
+      params[type] = value;
       validate(type);
     };
     const alpha = helpers.regex(/^\S+ \S+$/);
     return {
       submit,
-      fullName,
-      email,
-      phone,
       v$,
       alpha,
       blurInput,
-      fullNameValidate,
-      emailValidate,
-      phoneValidate,
-      phoneNumberMask,
-      clear,
       validForm,
+      params,
+      paramsValidate,
+      inputItem,
+      reset,
     };
   },
   validations() {
     return {
-      fullName: {
-        required,
-        reg: helpers.withMessage(
-          "Enter your first name and last name separated by a space",
-          this.alpha
-        ),
-      },
-      email: {
-        required,
-        email,
-      },
-      phone: {
-        required,
-        minLength: helpers.withMessage(
-          "Enter your phone in the format +375 (XX) XXX-XX-XX",
-          () => minLength(this.phone, 12)
-        ),
+      params: {
+        fullName: {
+          required,
+          reg: helpers.withMessage(
+            "Enter your first name and last name separated by a space",
+            this.alpha
+          ),
+        },
+        email: {
+          required,
+          email,
+        },
+        phone: {
+          required,
+          minLength: helpers.withMessage(
+            "Enter your phone in the format +375 (XX) XXX-XX-XX",
+            () => minLength(this.params.phone, 12)
+          ),
+        },
       },
     };
   },

@@ -37,9 +37,11 @@ export default {
     background-color: #1d90ff;
     border: none;
     border-radius: 20px;
+    cursor: pointer;
   }
   .disabled {
     background-color: #bbc1c5;
+    cursor: inherit;
   }
 }
 </style>
