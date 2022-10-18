@@ -11,7 +11,9 @@
       @accept="onAccept"
       @complete="onComplete"
     />
-    <small class="error-message" v-if="invalid">{{ error[0].$message }}</small>
+    <small class="error-message" v-if="error && error.length">{{
+      error[0].$message
+    }}</small>
   </div>
 </template>
 
@@ -23,8 +25,8 @@ export default {
     id: String,
     placeholder: String,
     invalid: Boolean,
-    error: Object,
-    phoneNumberMask: String,
+    error: Array,
+    phoneNumberMask: Object,
     clearField: Boolean,
     customStyle: String,
     icon: Boolean,

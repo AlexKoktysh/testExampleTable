@@ -12,6 +12,7 @@
         id="search"
         @blurInput="blurInput"
         placeholder="Search"
+        :invalid="false"
       />
       <div>users count: {{ searchCounter }}</div>
     </div>
